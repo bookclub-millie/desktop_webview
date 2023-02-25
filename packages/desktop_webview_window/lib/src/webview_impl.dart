@@ -248,4 +248,17 @@ class WebviewImpl extends Webview {
       "webMessage": webMessage,
     });
   }
+
+  @override
+  Future<void> fullScreen() {
+    return channel.invokeMethod("fullScreen", {"viewId": viewId});
+  }
+
+  @override
+  Future<void> reTitle(String title) {
+    return channel.invokeMethod("reTitle", {
+      "viewId": viewId,
+      "reTitle": title,
+    });
+  }
 }

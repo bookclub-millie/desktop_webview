@@ -188,6 +188,14 @@ class WebViewLayoutController: NSViewController {
       completer(result)
     }
   }
+
+  func fullScreen() {
+     self.view.window?.toggleFullScreen(self)
+  }
+
+  func reTitle(title: String) {
+     self.view.window?.title = title
+  }
 }
 
 extension WebViewLayoutController: WKNavigationDelegate {

@@ -272,6 +272,40 @@ public class DesktopWebviewWindowPlugin: NSObject, FlutterPlugin {
       }
       wc.webViewController.evaluateJavaScript(javaScriptString: js, completer: result)
       break
+    case "fullScreen":
+      guard let argument = call.arguments as? [String: Any?] else {
+        result(FlutterError(code: "0", message: "arg is not map", details: nil))
+        return
+      }
+      guard let viewId = argument["viewId"] as? Int64 else {
+        result(FlutterError(code: "0", message: "param viewId not found", details: nil))
+        return
+      }
+      guard let wc = webviews[viewId] else {
+        result(FlutterError(code: "0", message: "can not find webview for id: \(viewId)", details: nil))
+        return
+      }
+      wc.webViewController.fullScreen()
+      break
+    case "reTitle":
+      guard let argument = call.arguments as? [String: Any?] else {
+        result(FlutterError(code: "0", message: "arg is not map", details: nil))
+        return
+      }
+      guard let viewId = argument["viewId"] as? Int64 else {
+        result(FlutterError(code: "0", message: "param viewId not found", details: nil))
+        return
+      }
+      guard let wc = webviews[viewId] else {
+        result(FlutterError(code: "0", message: "can not find webview for id: \(viewId)", details: nil))
+        return
+      }
+      guard let reTitle = argument["reTitle"] as? String else {
+        result(FlutterError(code: "0", message: "param reTitle not found", details: nil))
+        return
+      }
+      wc.webViewController.reTitle(title: reTitle)
+      break
     default:
       result(FlutterMethodNotImplemented)
     }
