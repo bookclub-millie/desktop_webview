@@ -51,6 +51,8 @@ class WebView {
 
   void openDevToolsWindow();
 
+  void FullScreen();
+
   void ExecuteJavaScript(const std::wstring &javaScript,
                          std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 

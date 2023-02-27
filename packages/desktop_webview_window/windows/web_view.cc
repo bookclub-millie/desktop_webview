@@ -244,7 +244,6 @@ void WebView::Reload() {
   if (webview_) {
     webview_->Reload();
   }
-
 }
 
 void WebView::Stop() {
@@ -258,6 +257,13 @@ void WebView::openDevToolsWindow() {
     webview_->OpenDevToolsWindow();
   }
 }
+
+void WebView::FullScreen() {
+  if (webview_) {
+    webview_->FullScreen();
+  }
+}
+
 
 bool WebView::CanGoBack() const {
   if (webview_) {
