@@ -197,7 +197,21 @@ void WebviewWindowPlugin::HandleMethodCall(
     }
     windows_.erase(window_id);
     result->Success();
-  } else if (method_call.method_name() == "evaluateJavaScript") {
+  } else if (method_call.method_name() == "fullScreen") {
+    auto* arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
+    auto window_id = arguments->at(flutter::EncodableValue("viewId")).LongValue();
+    if (!windows_.count(window_id)) {
+      result->Error("0", "can not find webview window for id");
+      return;
+    }
+    if (!windows_[window_id]->GetWebView()) {
+      result->Error("0", "webview window not ready");
+      return;
+    }
+    windows_[window_id]->GetWebView()->FullScreen();
+    result->Success();
+    }
+    else if (method_call.method_name() == "evaluateJavaScript") {
     auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
     auto window_id = arguments->at(flutter::EncodableValue("viewId")).LongValue();
     auto javascript = std::get<std::string>(arguments->at(flutter::EncodableValue("javaScriptString")));
@@ -249,22 +263,7 @@ void WebviewWindowPlugin::HandleMethodCall(
     }
     windows_[window_id]->GetWebView()->openDevToolsWindow();
     result->Success();
-  } else if (method_call.method_name() == "fullScreen") {
-    auto* arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
-    auto window_id = arguments->at(flutter::EncodableValue("viewId")).LongValue();
-    if (!windows_.count(window_id)) {
-      result->Error("0", "can not find webview window for id");
-      return;
-    }
-    if (!windows_[window_id]->GetWebView()) {
-      result->Error("0", "webview window not ready");
-      return;
-    }
-    windows_[window_id]->GetWebView()->FullScreen();
-    result->Success();
-  }
-
-  else {
+  } else {
     result->NotImplemented();
   }
 }

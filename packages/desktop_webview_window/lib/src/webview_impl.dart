@@ -184,6 +184,19 @@ class WebviewImpl extends Webview {
   }
 
   @override
+  Future<void> fullScreen() {
+    return channel.invokeMethod("fullScreen", {"viewId": viewId});
+  }
+
+  @override
+  Future<void> reTitle(String title) {
+    return channel.invokeMethod("reTitle", {
+      "viewId": viewId,
+      "reTitle": title,
+    });
+  }
+
+  @override
   Future<void> openDevToolsWindow() {
     return channel.invokeMethod('openDevToolsWindow', {"viewId": viewId});
   }
@@ -246,19 +259,6 @@ class WebviewImpl extends Webview {
     return channel.invokeMethod("postWebMessageAsJson", {
       "viewId": viewId,
       "webMessage": webMessage,
-    });
-  }
-
-  @override
-  Future<void> fullScreen() {
-    return channel.invokeMethod("fullScreen", {"viewId": viewId});
-  }
-
-  @override
-  Future<void> reTitle(String title) {
-    return channel.invokeMethod("reTitle", {
-      "viewId": viewId,
-      "reTitle": title,
     });
   }
 }
