@@ -260,7 +260,7 @@ void WebView::openDevToolsWindow() {
 
 void WebView::FullScreen() {
   if (webview_) {
-    webview_->Close();
+    webview_->Reload();
   }
 }
 
