@@ -197,7 +197,7 @@ class WebViewLayoutController: NSViewController {
      self.view.window?.title = title
   }
 
-  func opacity(opacity: double) {
+  func opacity(opacity: Double) {
      self.view.window?.alphaValue = opacity
   }
 }
