@@ -87,4 +87,5 @@ abstract class Webview {
 
   Future<void> reTitle(String name);
 
+  Future<void> opacity(double opacity);
 }

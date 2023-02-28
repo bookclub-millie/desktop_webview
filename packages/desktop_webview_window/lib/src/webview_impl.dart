@@ -197,6 +197,14 @@ class WebviewImpl extends Webview {
   }
 
   @override
+  Future<void> opacity(double opacity) {
+    return channel.invokeMethod("opacity", {
+      "viewId": viewId,
+      "opacity": opacity,
+    });
+  }
+
+  @override
   Future<void> openDevToolsWindow() {
     return channel.invokeMethod('openDevToolsWindow', {"viewId": viewId});
   }

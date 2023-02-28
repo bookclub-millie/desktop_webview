@@ -196,6 +196,10 @@ class WebViewLayoutController: NSViewController {
   func reTitle(title: String) {
      self.view.window?.title = title
   }
+
+  func reTitle(opacity: double) {
+     self.view.window?.alphaValue = opacity
+  }
 }
 
 extension WebViewLayoutController: WKNavigationDelegate {

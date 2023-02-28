@@ -306,6 +306,25 @@ public class DesktopWebviewWindowPlugin: NSObject, FlutterPlugin {
       }
       wc.webViewController.reTitle(title: reTitle)
       break
+    case "opacity":
+      guard let argument = call.arguments as? [String: Any?] else {
+        result(FlutterError(code: "0", message: "arg is not map", details: nil))
+        return
+      }
+      guard let viewId = argument["viewId"] as? Int64 else {
+        result(FlutterError(code: "0", message: "param viewId not found", details: nil))
+        return
+      }
+      guard let wc = webviews[viewId] else {
+        result(FlutterError(code: "0", message: "can not find webview for id: \(viewId)", details: nil))
+        return
+      }
+      guard let opacity = argument["opacity"] as? double else {
+        result(FlutterError(code: "0", message: "param reTitle not found", details: nil))
+        return
+      }
+      wc.webViewController.opacity(opacity: opacity)
+      break
     default:
       result(FlutterMethodNotImplemented)
     }
