@@ -109,6 +109,7 @@ extension WebviewWindowController: NSWindowDelegate {
     methodChannel.invokeMethod("onWindowClose", arguments: ["id": viewId])
     DispatchQueue.main.async {
       self.webviewPlugin?.onWebviewWindowClose(viewId: self.viewId, wc: self)
+      self.sharingType = .none
     }
   }
 }
