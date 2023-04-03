@@ -35,6 +35,8 @@ class WebviewWindowController: NSWindowController {
     self.titleBarHeight = titleBarHeight
     self.titleBarTopPadding = titleBarTopPadding
     self.title = title
+    self.view.window.sharingType = .none
+
     super.init(window: nil)
   }
 
@@ -61,7 +63,6 @@ class WebviewWindowController: NSWindowController {
     window?.isReleasedWhenClosed = false
     window?.delegate = self
     window?.sharingType = .none
-    self.sharingType = .none
 
   }
 
@@ -111,7 +112,6 @@ extension WebviewWindowController: NSWindowDelegate {
     methodChannel.invokeMethod("onWindowClose", arguments: ["id": viewId])
     DispatchQueue.main.async {
       self.webviewPlugin?.onWebviewWindowClose(viewId: self.viewId, wc: self)
-      self.sharingType = .none
     }
   }
 }
