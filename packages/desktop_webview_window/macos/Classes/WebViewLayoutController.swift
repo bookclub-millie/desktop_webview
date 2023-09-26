@@ -8,6 +8,7 @@
 import Cocoa
 import FlutterMacOS
 import WebKit
+import SwiftUI
 
 class WebViewLayoutController: NSViewController {
   private lazy var titleBarController: FlutterViewController = {
@@ -16,9 +17,7 @@ class WebViewLayoutController: NSViewController {
     return FlutterViewController(project: project)
   }()
 
-  private lazy var webView: WKWebView = {
-    WKWebView()
-  }()
+  private var webView: WKWebView = WKWebView()
 
   private var javaScriptHandlerNames: [String] = []
 
@@ -34,51 +33,133 @@ class WebViewLayoutController: NSViewController {
 
   private let titleBarTopPadding: Int
 
-  public init(methodChannel: FlutterMethodChannel, viewId: Int64, titleBarHeight: Int, titleBarTopPadding: Int) {
-    self.viewId = viewId
-    self.methodChannel = methodChannel
-    self.titleBarHeight = titleBarHeight
-    self.titleBarTopPadding = titleBarTopPadding
-    super.init(nibName: "WebViewLayoutController", bundle: Bundle(for: WebViewLayoutController.self))
-  }
+  private var contentView : ContentView
+
+    public init(methodChannel: FlutterMethodChannel, viewId: Int64, titleBarHeight: Int, titleBarTopPadding: Int) {
+        self.viewId = viewId
+        self.methodChannel = methodChannel
+        self.titleBarHeight = titleBarHeight
+        self.titleBarTopPadding = titleBarTopPadding
+        self.contentView = ContentView(webView: webView);
+        super.init(nibName: "WebViewLayoutController", bundle: Bundle(for: WebViewLayoutController.self))
+    }
+
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func loadView() {
-    super.loadView()
+    struct ContentView : View {
+        @State var text = "Update me!"
+        @State var webView : WKWebView
 
-    addChild(titleBarController)
-    titleBarController.view.translatesAutoresizingMaskIntoConstraints = false
+        @State var isHover01 = false
+        @State var isHover02 = false
+        @State var isHover03 = false
 
-    // Register titlebar plugins
-    ClientMessageChannelPlugin.register(with: titleBarController.registrar(forPlugin: "DesktopWebviewWindowPlugin"))
+        init(webView: WKWebView) {
+            self.webView = webView
+        }
 
-    let flutterView = titleBarController.view
+        var body: some View {
+            VStack {
+                HStack {
+                    Button(action:{
+                        if webView.canGoBack {
+                            webView.goBack()
+                        }
+                    }){
+                        Image(systemName: "arrow.left")
+                            .renderingMode(.original)
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(Color(isHover01 ? .black.copy(alpha: 0.2)! : .clear))
+                    .animation(.spring())
+                    .onHover { hover in
+                        isHover01 = hover
+                    }
+                    .cornerRadius(100)
 
-    flutterView.translatesAutoresizingMaskIntoConstraints = false
+                    Button(action:{
+                        if webView.canGoForward {
+                            webView.goForward()
+                        }
+                    }){
+                        Image(systemName: "arrow.right")
+                            .renderingMode(.original)
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(Color(isHover02 ? .black.copy(alpha: 0.2)! : .clear))
+                    .animation(.spring())
+                    .onHover { hover in
+                        isHover02 = hover
+                    }
+                    .cornerRadius(100)
 
-    view.addSubview(flutterView)
+                    Button(action:{
+                        webView.reload()
+                    }){
+                        Image(systemName: "arrow.clockwise")
+                            .renderingMode(.original)
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .background(Color(isHover03 ? .black.copy(alpha: 0.2)! : .clear))
+                    .animation(.spring())
+                    .onHover { hover in
+                        isHover03 = hover
+                    }
+                    .cornerRadius(100)
 
-    let constraints = [
-      flutterView.topAnchor.constraint(equalTo: view.topAnchor),
-      flutterView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      flutterView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      flutterView.heightAnchor.constraint(equalToConstant: CGFloat(titleBarHeight + titleBarTopPadding)),
-    ]
 
-    NSLayoutConstraint.activate(constraints)
+                    Spacer()
+                }.padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
+            }
+        }
+    }
 
-    view.addSubview(webView)
-    webView.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      webView.topAnchor.constraint(equalTo: flutterView.bottomAnchor),
-      webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-      webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-    ])
-  }
+
+    override func loadView() {
+      super.loadView()
+
+      addChild(titleBarController)
+      titleBarController.view.translatesAutoresizingMaskIntoConstraints = false
+
+      // Register titlebar plugins
+      ClientMessageChannelPlugin.register(with: titleBarController.registrar(forPlugin: "DesktopWebviewWindowPlugin"))
+
+      addViews()
+    }
+
+    func addViews(){
+        view.subviews.removeAll()
+
+        let nContentView = NSHostingView(rootView: contentView);
+        view.addSubview(nContentView)
+        nContentView.translatesAutoresizingMaskIntoConstraints = false
+
+      let constraints = [
+          nContentView.topAnchor.constraint(equalTo: view.topAnchor),
+          nContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+          nContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+          nContentView.heightAnchor.constraint(equalToConstant: CGFloat(titleBarHeight + titleBarTopPadding)),
+      ]
+
+
+      NSLayoutConstraint.activate(constraints)
+
+
+      view.addSubview(webView)
+      webView.translatesAutoresizingMaskIntoConstraints = false
+      NSLayoutConstraint.activate([
+        webView.topAnchor.constraint(equalTo: nContentView.bottomAnchor),
+        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      ])
+    }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -159,47 +240,47 @@ class WebViewLayoutController: NSViewController {
     webView.configuration.userContentController.removeAllUserScripts()
   }
 
-  func reload() {
-    webView.reload()
-  }
-
-  func goBack() {
-    if webView.canGoBack {
-      webView.goBack()
+    func reload() {
+        webView.reload()
     }
-  }
 
-  func goForward() {
-    if webView.canGoForward {
-      webView.goForward()
+    func goBack() {
+        if webView.canGoBack {
+            webView.goBack()
+        }
     }
-  }
 
-  func stopLoading() {
-    webView.stopLoading()
-  }
-
-  func evaluateJavaScript(javaScriptString: String, completer: @escaping FlutterResult) {
-    webView.evaluateJavaScript(javaScriptString) { result, error in
-      if let error = error {
-        completer(FlutterError(code: "1", message: error.localizedDescription, details: nil))
-        return
-      }
-      completer(result)
+    func goForward() {
+        if webView.canGoForward {
+            webView.goForward()
+        }
     }
-  }
 
-  func fullScreen() {
-     self.view.window?.toggleFullScreen(self)
-  }
+    func stopLoading() {
+        webView.stopLoading()
+    }
 
-  func reTitle(title: String) {
-     self.view.window?.title = title
-  }
+    func evaluateJavaScript(javaScriptString: String, completer: @escaping FlutterResult) {
+        webView.evaluateJavaScript(javaScriptString) { result, error in
+            if let error = error {
+                completer(FlutterError(code: "1", message: error.localizedDescription, details: nil))
+                return
+            }
+            completer(result)
+        }
+    }
 
-  func opacity(opacity: Double) {
-     self.view.window?.alphaValue = opacity
-  }
+    func fullScreen() {
+        self.view.window?.toggleFullScreen(self)
+    }
+
+    func reTitle(title: String) {
+        self.view.window?.title = title
+    }
+
+    func opacity(opacity: Double) {
+        self.view.window?.alphaValue = opacity
+    }
 }
 
 extension WebViewLayoutController: WKNavigationDelegate {
