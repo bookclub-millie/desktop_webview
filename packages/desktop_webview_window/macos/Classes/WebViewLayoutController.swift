@@ -49,6 +49,14 @@ class WebViewLayoutController: NSViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
+    struct EmptyView: View{
+        var body: some View{
+            HStack{
+                Spacer()
+            }.frame(height: 30)
+        }
+    }
+
     struct ContentView : View {
         @State var text = "Update me!"
         @State var webView : WKWebView
@@ -136,29 +144,27 @@ class WebViewLayoutController: NSViewController {
     func addViews(){
         view.subviews.removeAll()
 
-        let nContentView = NSHostingView(rootView: contentView);
+        let nContentView = titleBarTopPadding == 30 ? NSHostingView(rootView: EmptyView()) : NSHostingView(rootView: contentView);
         view.addSubview(nContentView)
         nContentView.translatesAutoresizingMaskIntoConstraints = false
 
-      let constraints = [
-          nContentView.topAnchor.constraint(equalTo: view.topAnchor),
-          nContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-          nContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-          nContentView.heightAnchor.constraint(equalToConstant: CGFloat(titleBarHeight + titleBarTopPadding)),
-      ]
+        let constraints = [
+            nContentView.topAnchor.constraint(equalTo: view.topAnchor),
+            nContentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            nContentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            nContentView.heightAnchor.constraint(equalToConstant: CGFloat(titleBarHeight + titleBarTopPadding)),
+        ]
 
+        NSLayoutConstraint.activate(constraints)
 
-      NSLayoutConstraint.activate(constraints)
-
-
-      view.addSubview(webView)
-      webView.translatesAutoresizingMaskIntoConstraints = false
-      NSLayoutConstraint.activate([
-        webView.topAnchor.constraint(equalTo: nContentView.bottomAnchor),
-        webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      ])
+        view.addSubview(webView)
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: nContentView.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
     }
 
   override func viewDidLoad() {
