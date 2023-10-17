@@ -245,6 +245,13 @@ WebviewWindow::MessageHandler(
     case WM_ACTIVATE: {
       return 0;
     }
+    case WM_GETMINMAXINFO: {
+        MINMAXINFO* minMax = (MINMAXINFO*)lparam;
+        minMax->ptMinTrackSize.x = 500;
+        minMax->ptMinTrackSize.y = 500;
+
+        return 0;
+    }
   }
 
   return DefWindowProc(hwnd, message, wparam, lparam);

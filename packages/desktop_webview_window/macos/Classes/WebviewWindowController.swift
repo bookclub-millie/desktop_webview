@@ -55,6 +55,7 @@ class WebviewWindowController: NSWindowController {
       titleBarTopPadding: titleBarTopPadding)
 
     window?.setContentSize(NSSize(width: width, height: height))
+    window?.contentMinSize = NSSize(width: 800, height: 500)
     window?.center()
     window?.title = title
 
