@@ -179,7 +179,11 @@ class WebViewLayoutController: NSViewController {
     webView.configuration.preferences.javaScriptCanOpenWindowsAutomatically = true
     webView.configuration.allowsAirPlayForMediaPlayback = true
     webView.configuration.mediaTypesRequiringUserActionForPlayback = .video
-
+    if #available(macOS 13.3, *) {
+        webView.isInspectable = true
+        } else {
+     // Fallback on earlier versions
+    }
     webView.addObserver(self, forKeyPath: "canGoBack", options: .new, context: nil)
     webView.addObserver(self, forKeyPath: "canGoForward", options: .new, context: nil)
     webView.addObserver(self, forKeyPath: "loading", options: .new, context: nil)
