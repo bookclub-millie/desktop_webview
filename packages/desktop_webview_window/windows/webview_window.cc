@@ -126,7 +126,7 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   ShowWindow(title_bar_handle, SW_SHOW);
 
   assert(hwnd_ != nullptr);
-  SetWindowDisplayAffinity(hwnd_.get(), WDA_MONITOR);
+  // SetWindowDisplayAffinity(hwnd_.get(), WDA_MONITOR);
   ShowWindow(hwnd_.get(), SW_SHOW);
   UpdateWindow(hwnd_.get());
 

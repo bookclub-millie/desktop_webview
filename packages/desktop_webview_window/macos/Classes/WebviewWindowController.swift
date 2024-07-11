@@ -61,7 +61,7 @@ class WebviewWindowController: NSWindowController {
 
     window?.isReleasedWhenClosed = false
     window?.delegate = self
-    window?.sharingType = .none
+    // window?.sharingType = .none
 
   }
 
