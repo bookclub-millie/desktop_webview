@@ -14,17 +14,19 @@
 
 #include "include/desktop_webview_window/desktop_webview_window_plugin.h"
 
-namespace {
+namespace
+{
 
-TCHAR kWebViewWindowClassName[] = _T("WebviewWindow");
+  TCHAR kWebViewWindowClassName[] = _T("WebviewWindow");
 
-using namespace webview_window;
+  using namespace webview_window;
 
-// Scale helper to convert logical scaler values to physical using passed in
-// scale factor
-int Scale(int source, double scale_factor) {
-  return static_cast<int>(source * scale_factor);
-}
+  // Scale helper to convert logical scaler values to physical using passed in
+  // scale factor
+  int Scale(int source, double scale_factor)
+  {
+    return static_cast<int>(source * scale_factor);
+  }
 
 }
 
@@ -34,16 +36,16 @@ WebviewWindow::WebviewWindow(
     MethodChannelPtr method_channel,
     int64_t window_id,
     int title_bar_height,
-    std::function<void()> on_close_callback
-) : method_channel_(std::move(method_channel)),
-    window_id_(window_id),
-    on_close_callback_(std::move(on_close_callback)),
-    hwnd_(),
-    title_bar_height_(title_bar_height) {
-
+    std::function<void()> on_close_callback) : method_channel_(std::move(method_channel)),
+                                               window_id_(window_id),
+                                               on_close_callback_(std::move(on_close_callback)),
+                                               hwnd_(),
+                                               title_bar_height_(title_bar_height)
+{
 }
 
-WebviewWindow::~WebviewWindow() {
+WebviewWindow::~WebviewWindow()
+{
   flutter_action_bar_.reset();
   web_view_.reset();
   SetWindowLongPtr(hwnd_.get(), GWLP_USERDATA, 0);
@@ -53,7 +55,8 @@ WebviewWindow::~WebviewWindow() {
 void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int width,
                                   const std::wstring &userDataFolder,
                                   int windowPosX, int windowPosY, bool usePluginDefaultBehaviour,
-                                  bool openMaximized, CreateCallback callback) {
+                                  bool openMaximized, CreateCallback callback)
+{
 
   RegisterWindowClass(kWebViewWindowClassName, WebviewWindow::WndProc);
 
@@ -65,25 +68,29 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
   double scale_factor = dpi / 96.0;
 
-  if (usePluginDefaultBehaviour) {
+  if (usePluginDefaultBehaviour)
+  {
     hwnd_ = wil::unique_hwnd(::CreateWindow(
-      kWebViewWindowClassName, title.c_str(),
-      WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-      CW_USEDEFAULT, CW_USEDEFAULT,
-      Scale(width, scale_factor), Scale(height, scale_factor),
-      nullptr, nullptr, GetModuleHandle(nullptr), this));
-  } else {
+        kWebViewWindowClassName, title.c_str(),
+        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        Scale(width, scale_factor), Scale(height, scale_factor),
+        nullptr, nullptr, GetModuleHandle(nullptr), this));
+  }
+  else
+  {
     DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
     if (openMaximized)
       dwStyle |= WS_MAXIMIZE;
     hwnd_ = wil::unique_hwnd(::CreateWindow(
-      kWebViewWindowClassName, title.c_str(),
-      dwStyle,
-      windowPosX, windowPosY,
-      width, height,
-      nullptr, nullptr, GetModuleHandle(nullptr), this));
+        kWebViewWindowClassName, title.c_str(),
+        dwStyle,
+        windowPosX, windowPosY,
+        width, height,
+        nullptr, nullptr, GetModuleHandle(nullptr), this));
   }
-  if (!hwnd_) {
+  if (!hwnd_)
+  {
     callback(false);
     return;
   }
@@ -91,7 +98,8 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // Centered window on screen.
   RECT rc;
   GetClientRect(hwnd_.get(), &rc);
-  if (usePluginDefaultBehaviour) {
+  if (usePluginDefaultBehaviour)
+  {
     ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
     SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
   }
@@ -101,10 +109,14 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // Create the browser view.
   web_view_ = std::make_unique<webview_window::WebView>(
       method_channel_, window_id_, userDataFolder,
-      [callback](HRESULT hr) {
-        if (SUCCEEDED(hr)) {
+      [callback](HRESULT hr)
+      {
+        if (SUCCEEDED(hr))
+        {
           callback(true);
-        } else {
+        }
+        else
+        {
           callback(false);
         }
       });
@@ -129,10 +141,10 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   SetWindowDisplayAffinity(hwnd_.get(), WDA_MONITOR);
   ShowWindow(hwnd_.get(), SW_SHOW);
   UpdateWindow(hwnd_.get());
-
 }
 
-void WebviewWindow::SetBrightness(int brightness) {
+void WebviewWindow::SetBrightness(int brightness)
+{
 }
 
 // static
@@ -141,15 +153,18 @@ WebviewWindow::WndProc(
     HWND window,
     UINT message,
     WPARAM wparam,
-    LPARAM lparam
-) noexcept {
-  if (message == WM_NCCREATE) {
+    LPARAM lparam) noexcept
+{
+  if (message == WM_NCCREATE)
+  {
     auto window_struct = reinterpret_cast<CREATESTRUCT *>(lparam);
     SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window_struct->lpCreateParams));
 
-//    auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
-//    that->hwnd_ = window;
-  } else if (WebviewWindow *that = GetThisFromHandle(window)) {
+    //    auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
+    //    that->hwnd_ = window;
+  }
+  else if (WebviewWindow *that = GetThisFromHandle(window))
+  {
     return that->MessageHandler(window, message, wparam, lparam);
   }
 
@@ -161,105 +176,120 @@ WebviewWindow::MessageHandler(
     HWND hwnd,
     UINT message,
     WPARAM wparam,
-    LPARAM lparam
-) noexcept {
+    LPARAM lparam) noexcept
+{
   // Give Flutter, including plugins, an opportunity to handle window messages.
-  if (flutter_action_bar_) {
+  if (flutter_action_bar_)
+  {
     std::optional<LRESULT> result = flutter_action_bar_->HandleTopLevelWindowProc(hwnd, message, wparam, lparam);
-    if (result) {
+    if (result)
+    {
       return *result;
     }
   }
 
-  switch (message) {
-    case WM_DESTROY: {
-      flutter_action_bar_.reset();
-      web_view_.reset();
+  switch (message)
+  {
+  case WM_DESTROY:
+  {
+    flutter_action_bar_.reset();
+    web_view_.reset();
 
-      // might receive multiple WM_DESTROY messages.
-      if (!destroyed_) {
-        destroyed_ = true;
-        auto args = flutter::EncodableMap{
-            {flutter::EncodableValue("id"), flutter::EncodableValue(window_id_)}
-        };
-        method_channel_->InvokeMethod(
-            "onWindowClose",
-            std::make_unique<flutter::EncodableValue>(args)
-        );
-        if (on_close_callback_) {
-          on_close_callback_();
-        }
+    // might receive multiple WM_DESTROY messages.
+    if (!destroyed_)
+    {
+      destroyed_ = true;
+      auto args = flutter::EncodableMap{
+          {flutter::EncodableValue("id"), flutter::EncodableValue(window_id_)}};
+      method_channel_->InvokeMethod(
+          "onWindowClose",
+          std::make_unique<flutter::EncodableValue>(args));
+      if (on_close_callback_)
+      {
+        on_close_callback_();
       }
-      return 0;
     }
-    case WM_DPICHANGED: {
-      auto newRectSize = reinterpret_cast<RECT *>(lparam);
-      LONG newWidth = newRectSize->right - newRectSize->left;
-      LONG newHeight = newRectSize->bottom - newRectSize->top;
+    return 0;
+  }
+  case WM_DPICHANGED:
+  {
+    auto newRectSize = reinterpret_cast<RECT *>(lparam);
+    LONG newWidth = newRectSize->right - newRectSize->left;
+    LONG newHeight = newRectSize->bottom - newRectSize->top;
 
-      SetWindowPos(hwnd, nullptr, newRectSize->left, newRectSize->top, newWidth,
-                   newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
-      return 0;
+    SetWindowPos(hwnd, nullptr, newRectSize->left, newRectSize->top, newWidth,
+                 newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
+    return 0;
+  }
+  case WM_SIZE:
+  {
+    RECT rect;
+    GetClientRect(hwnd, &rect);
+    HMONITOR monitor = MonitorFromRect(&rect, MONITOR_DEFAULTTONEAREST);
+    UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
+    double scale_factor = dpi / 96.0;
+
+    auto title_bar_height = Scale(title_bar_height_, scale_factor);
+
+    if (web_view_ != nullptr)
+    {
+      MoveWindow(web_view_->NativeWindow().get(), 0, title_bar_height,
+                 rect.right - rect.left, rect.bottom - rect.top - title_bar_height,
+                 true);
+      web_view_->UpdateBounds();
     }
-    case WM_SIZE: {
-      RECT rect;
-      GetClientRect(hwnd, &rect);
-      HMONITOR monitor = MonitorFromRect(&rect, MONITOR_DEFAULTTONEAREST);
-      UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
-      double scale_factor = dpi / 96.0;
 
-      auto title_bar_height = Scale(title_bar_height_, scale_factor);
-
-      if (web_view_ != nullptr) {
-        MoveWindow(web_view_->NativeWindow().get(), 0, title_bar_height,
-                   rect.right - rect.left, rect.bottom - rect.top - title_bar_height,
-                   true);
-        web_view_->UpdateBounds();
+    if (flutter_action_bar_)
+    {
+      // FIXME(BOYAN) remove this trick if flutter provide a properly way to force redraw the flutter view.
+      // When user only change the height of window, flutter title bar height will not change, because the title_bar_height
+      // is a fixed value. In this situation, the flutter view will not perform draw since no size changed. So we need
+      // perform a force redraw to flutter view. Although flutter provide a function FlutterDesktopViewControllerForceRedraw.
+      // https://github.com/flutter/engine/pull/24186 But we can not use this because it not provided on wrapper.
+      if (last_title_bar_width_ != rect.right - rect.left)
+      {
+        // Size and position the flutter window.
+        last_title_bar_width_ = rect.right - rect.left;
+        MoveWindow(flutter_action_bar_->GetWindow(), 0, 0,
+                   last_title_bar_width_, title_bar_height, true);
       }
-
-      if (flutter_action_bar_) {
-        // FIXME(BOYAN) remove this trick if flutter provide a properly way to force redraw the flutter view.
-        // When user only change the height of window, flutter title bar height will not change, because the title_bar_height
-        // is a fixed value. In this situation, the flutter view will not perform draw since no size changed. So we need
-        // perform a force redraw to flutter view. Although flutter provide a function FlutterDesktopViewControllerForceRedraw.
-        // https://github.com/flutter/engine/pull/24186 But we can not use this because it not provided on wrapper.
-        if (last_title_bar_width_ != rect.right - rect.left) {
-          // Size and position the flutter window.
-          last_title_bar_width_ = rect.right - rect.left;
-          MoveWindow(flutter_action_bar_->GetWindow(), 0, 0,
-                     last_title_bar_width_, title_bar_height, true);
-        } else {
-          last_title_bar_width_ = rect.right - rect.left + 1;
-          MoveWindow(flutter_action_bar_->GetWindow(), 0, 0,
-                     last_title_bar_width_, title_bar_height, true);
-        }
+      else
+      {
+        last_title_bar_width_ = rect.right - rect.left + 1;
+        MoveWindow(flutter_action_bar_->GetWindow(), 0, 0,
+                   last_title_bar_width_, title_bar_height, true);
       }
-      return 0;
     }
-    case WM_FONTCHANGE: {
-      if (flutter_action_bar_) {
-        flutter_action_bar_->ReloadSystemFonts();
-      }
-      break;
+    return 0;
+  }
+  case WM_FONTCHANGE:
+  {
+    if (flutter_action_bar_)
+    {
+      flutter_action_bar_->ReloadSystemFonts();
     }
-    case WM_ACTIVATE: {
-      return 0;
-    }
-    case WM_GETMINMAXINFO: {
-        MINMAXINFO* minMax = (MINMAXINFO*)lparam;
-        minMax->ptMinTrackSize.x = 500;
-        minMax->ptMinTrackSize.y = 500;
+    break;
+  }
+  case WM_ACTIVATE:
+  {
+    return 0;
+  }
+  case WM_GETMINMAXINFO:
+  {
+    MINMAXINFO *minMax = (MINMAXINFO *)lparam;
+    minMax->ptMinTrackSize.x = 320;
+    minMax->ptMinTrackSize.y = 320;
 
-        return 0;
-    }
+    return 0;
+  }
   }
 
   return DefWindowProc(hwnd, message, wparam, lparam);
 }
 
 // static
-WebviewWindow *WebviewWindow::GetThisFromHandle(HWND const window) noexcept {
+WebviewWindow *WebviewWindow::GetThisFromHandle(HWND const window) noexcept
+{
   return reinterpret_cast<WebviewWindow *>(
       GetWindowLongPtr(window, GWLP_USERDATA));
 }
-
