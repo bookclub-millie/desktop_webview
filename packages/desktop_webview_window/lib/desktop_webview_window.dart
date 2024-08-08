@@ -190,4 +190,9 @@ class WebviewWindow {
       }
     }
   }
+
+  static Future<Offset> getPosition() async {
+    final position = await _channel.invokeMethod('getPosition') as Map;
+    return Offset(position['x'] as double, position['y'] as double);
+  }
 }
