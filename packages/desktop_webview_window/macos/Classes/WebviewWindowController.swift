@@ -62,7 +62,7 @@ class WebviewWindowController: NSWindowController {
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
     //set window position
-    let x = CGFloat(integerLiteral: windowPosX)
+    let x                                                                                                                                                                                                                                                                                                                                                                                                                                                    = CGFloat(integerLiteral: windowPosX)
     let y = CGFloat(integerLiteral: windowPosY)
 
     // let screenFrame = NSScreen.main?.frame
@@ -119,6 +119,14 @@ class WebviewWindowController: NSWindowController {
 
   override var windowNibName: NSNib.Name? {
     "WebviewWindowController"
+  }
+
+  //return position of the webview
+  func getPosition() -> [String: Int] {
+    let frame = window?.frame
+    let x = Int(frame!.origin.x)
+    let y = Int(frame!.origin.y)
+    return ["x": x, "y": y]
   }
 }
 
