@@ -38,12 +38,14 @@ public class DesktopWebviewWindowPlugin: NSObject, FlutterPlugin {
 
       let controller = WebviewWindowController(
         viewId: viewId, methodChannel: methodChannel,
-        width: width, height: height, title: title,
+        width: width, height: height, 
         windowPosX: windowPosX, windowPosY: windowPosY,
+        title: title,
         titleBarHeight: titleBarHeight, titleBarTopPadding: titleBarTopPadding
       )
       controller.webviewPlugin = self
       webviews[viewId] = controller
+
       controller.showWindow(nil)
       result(viewId)
       viewId += 1
