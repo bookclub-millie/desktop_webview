@@ -108,6 +108,9 @@ class WebviewWindow {
     }
     switch (call.method) {
       case "onWindowClose":
+        final windowPosX = args['windowPosX'] as int;
+        final windowPosY = args['windowPosY'] as int;
+        webview.onJavaScriptMessage('getWindowPosition', '$windowPosX,$windowPosY');
         _webviews.remove(webview);
         webview.onClosed();
         break;
