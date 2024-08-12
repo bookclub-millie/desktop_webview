@@ -157,14 +157,12 @@ void WebviewWindow::getWindowPosition(std::unique_ptr<flutter::MethodResult<flut
 {
   RECT rc;
   GetWindowRect(hwnd_.get(), &rc);
-  this->windowPosX = rc.left;
-  this->windowPosY = rc.top;
 
   std::unique_ptr<WINDOWPLACEMENT> wp(new WINDOWPLACEMENT);
   GetWindowPlacement(hwnd_.get(), wp.get());
   std::map<flutter::EncodableValue, flutter::EncodableValue> m{
-      {"x", windowPosX},
-      {"y", windowPosY},
+      {"x", rc.left},
+      {"y", rc.top},
       {"width", rc.right - rc.left},
       {"height", rc.bottom - rc.top},
       {"maximized", wp->showCmd == SW_MAXIMIZE}};
