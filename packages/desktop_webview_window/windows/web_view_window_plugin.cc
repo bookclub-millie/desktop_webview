@@ -75,7 +75,7 @@ void WebviewWindowPlugin::HandleMethodCall(
         {
           windows_.erase(window_id);
         });
-    std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>> resultd2(std::move(result));
+    std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>> result2(std::move(result));
     window->CreateAndShow(
         utf8_to_wide(title), int(height), int(width), utf8_to_wide(userDataFolder),
         int(windowPosX), int(windowPosY), usePluginDefaultBehaviour, openMaximized,
