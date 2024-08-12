@@ -57,9 +57,9 @@ public:
 
   void moveWebviewWindow(int left, int top, int width, int height);
 
-  void getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer)
+  void getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
-      [[nodiscard]] const std::unique_ptr<webview_window::WebView> &GetWebView() const
+  [[nodiscard]] const std::unique_ptr<webview_window::WebView> &GetWebView() const
   {
     return web_view_;
   }
@@ -85,6 +85,9 @@ private:
   bool destroyed_ = false;
 
   int title_bar_height_;
+
+  int windowPosX = 0;
+  int windowPosY = 0;
 
   // Processes and route salient window messages for mouse handling,
   // size change and DPI. Delegates handling of these to member overloads that
