@@ -269,11 +269,4 @@ class WebviewImpl extends Webview {
       "webMessage": webMessage,
     });
   }
-
-  @override
-  Future<Map<dynamic, dynamic>?> getWindowPosition() async {
-    return await channel.invokeMethod("getWindowPosition", {
-      "viewId": viewId,
-    });
-  }
 }
