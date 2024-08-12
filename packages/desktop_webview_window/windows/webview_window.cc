@@ -223,6 +223,12 @@ WebviewWindow::MessageHandler(
       destroyed_ = true;
       auto args = flutter::EncodableMap{
           {flutter::EncodableValue("id"), flutter::EncodableValue(window_id_)}};
+      // add position X and Y to args
+      RECT rc;
+      GetWindowRect(hwnd, &rc);
+      args[flutter::EncodableValue("x")] = flutter::EncodableValue(rc.left);
+      args[flutter::EncodableValue("y")] = flutter::EncodableValue(rc.top);
+
       method_channel_->InvokeMethod(
           "onWindowClose",
           std::make_unique<flutter::EncodableValue>(args));
