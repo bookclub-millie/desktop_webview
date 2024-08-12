@@ -16,7 +16,7 @@ class WebviewWindowController: NSWindowController {
 
   private let width, height: Int
 
-  private var windowPosX, windowPosY: Int?
+  private var windowPosX, windowPosY: Int
 
   private var titleBarHeight: Int
 
@@ -28,7 +28,7 @@ class WebviewWindowController: NSWindowController {
 
   init(viewId: Int64, methodChannel: FlutterMethodChannel,
        width: Int, height: Int,
-        windowPosX: Int?, windowPosY: Int?,
+        windowPosX: Int, windowPosY: Int,
        title: String, titleBarHeight: Int,
        titleBarTopPadding: Int) {
     self.viewId = viewId
@@ -62,15 +62,15 @@ class WebviewWindowController: NSWindowController {
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
 
-    let screenFrame = NSScreen.main?.frame
-    let windowFrame = window?.frame
-    let centerX = screenFrame!.origin.x
-    let centerY = (screenFrame!.height - windowFrame!.height) / 2
+    // let screenFrame = NSScreen.main?.frame
+    // let windowFrame = window?.frame
+    // let centerX = screenFrame!.origin.x
+    // let centerY = (screenFrame!.height - windowFrame!.height) / 2
 
     //set window position
-    var x = CGFloat(windowPosX ?? Int(centerX))
-    var y = CGFloat(windowPosY ?? Int(centerY))
-    
+    var x = CGFloat(integerLiteral: windowPosX)
+    var y = CGFloat(integerLiteral: windowPosY)
+
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     // window?.center()
     window?.title = title
