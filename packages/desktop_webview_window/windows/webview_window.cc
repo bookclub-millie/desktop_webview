@@ -151,16 +151,14 @@ void WebviewWindow::SetBrightness(int brightness)
 void WebviewWindow::moveWebviewWindow(int left, int top, int width, int height)
 {
   ::SetWindowPos(hwnd_.get(), nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
-  windowPosX = left;
-  windowPosY = top;
 }
 
 void WebviewWindow::getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer)
 {
   RECT rc;
   GetWindowRect(hwnd_.get(), &rc);
-  windowPosX = rc.left;
-  windowPosY = rc.top;
+  this->windowPosX = rc.left;
+  this->windowPosY = rc.top;
 
   std::unique_ptr<WINDOWPLACEMENT> wp(new WINDOWPLACEMENT);
   GetWindowPlacement(hwnd_.get(), wp.get());
