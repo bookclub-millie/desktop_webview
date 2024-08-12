@@ -5,8 +5,8 @@ class CreateConfiguration {
   final int windowHeight;
 
   /// Position of the top left point of the webview window
-  final int windowPosX;
-  final int windowPosY;
+  final int? windowPosX;
+  final int? windowPosY;
 
   /// the title of window
   final String title;
@@ -23,8 +23,8 @@ class CreateConfiguration {
   const CreateConfiguration({
     this.windowWidth = 1280,
     this.windowHeight = 720,
-    this.windowPosX = 0,
-    this.windowPosY = 0,
+    this.windowPosX,
+    this.windowPosY,
     this.title = "",
     this.titleBarHeight = 40,
     this.titleBarTopPadding = 0,

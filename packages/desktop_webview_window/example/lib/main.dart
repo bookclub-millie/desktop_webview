@@ -69,8 +69,8 @@ class _MyAppState extends State<MyApp> {
                   configuration: CreateConfiguration(
                     windowHeight: 1280,
                     windowWidth: 720,
-                    windowPosX: 0,
-                    windowPosY: 0,
+                    windowPosX: null,
+                    windowPosY: null,
                     title: "ExampleTestWindow",
                     titleBarTopPadding: Platform.isMacOS ? 20 : 0,
                     userDataFolderWindows: await _getWebViewPath(),
