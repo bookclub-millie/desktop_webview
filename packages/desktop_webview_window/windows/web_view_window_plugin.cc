@@ -57,7 +57,13 @@ void WebviewWindowPlugin::HandleMethodCall(
       result->Error("0", "WebView runtime not available");
       return;
     }
-    auto useWindowPositionAndSize = std::get<bool>(arguments->at(flutter::EncodableValue("useWindowPositionAndSize")));
+    auto *arguments = std::get_if<flutter::EncodableMap>(method_call.arguments());
+    auto width = arguments->at(flutter::EncodableValue("windowWidth")).LongValue();
+    auto height = arguments->at(flutter::EncodableValue("windowHeight")).LongValue();
+    auto title = std::get<std::string>(arguments->at(flutter::EncodableValue("title")));
+    auto titleBarHeight = arguments->at(flutter::EncodableValue("titleBarHeight")).LongValue();
+    auto userDataFolder = std::get<std::string>(arguments->at(flutter::EncodableValue("userDataFolderWindows")));
+    auto usePluginDefaultBehaviour = std::get<bool>(arguments->at(flutter::EncodableValue("usePluginDefaultBehaviour")));
     auto openMaximized = std::get<bool>(arguments->at(flutter::EncodableValue("openMaximized")));
     auto windowPosX = arguments->at(flutter::EncodableValue("windowPosX")).LongValue();
     auto windowPosY = arguments->at(flutter::EncodableValue("windowPosY")).LongValue();
@@ -69,10 +75,10 @@ void WebviewWindowPlugin::HandleMethodCall(
         {
           windows_.erase(window_id);
         });
-    std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>> result2(std::move(result));
+    std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>> resultd2(std::move(result));
     window->CreateAndShow(
         utf8_to_wide(title), int(height), int(width), utf8_to_wide(userDataFolder),
-        int(windowPosX), int(windowPosY), useWindowPositionAndSize, openMaximized,
+        int(windowPosX), int(windowPosY), usePluginDefaultBehaviour, openMaximized,
         [this, window_id, result(result2)](bool succeed) mutable
         {
           if (!succeed)
