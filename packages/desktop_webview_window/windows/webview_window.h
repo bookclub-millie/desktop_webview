@@ -86,9 +86,6 @@ private:
 
   int title_bar_height_;
 
-  int windowPosX = 0;
-  int windowPosY = 0;
-
   // Processes and route salient window messages for mouse handling,
   // size change and DPI. Delegates handling of these to member overloads that
   // inheriting classes can handle.
