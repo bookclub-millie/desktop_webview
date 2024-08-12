@@ -68,9 +68,9 @@ class WebviewWindowController: NSWindowController {
     let centerY = (screenFrame!.height - windowFrame!.height) / 2
 
     //set window position
-    var x = CGFloat(integerLiteral: windowPosX) ?? centerX
-    var y = CGFloat(integerLiteral: windowPosY) ?? centerY
-
+    var x = CGFloat(windowPosX ?? Int(centerX))
+    var y = CGFloat(windowPosY ?? Int(centerY))
+    
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     // window?.center()
     window?.title = title
