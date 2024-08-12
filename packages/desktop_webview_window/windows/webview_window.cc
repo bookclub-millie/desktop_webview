@@ -148,26 +148,9 @@ void WebviewWindow::SetBrightness(int brightness)
 {
 }
 
-void WebviewWindow::setVisibility(bool visible)
-{
-  if (visible)
-    ::ShowWindow(hwnd_.get(), SW_SHOW);
-  else
-    ::ShowWindow(hwnd_.get(), SW_HIDE);
-}
-
 void WebviewWindow::moveWebviewWindow(int left, int top, int width, int height)
 {
   ::SetWindowPos(hwnd_.get(), nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
-}
-
-void WebviewWindow::bringToForeground(bool maximized)
-{
-  SetForegroundWindow(hwnd_.get());
-  if (maximized)
-  {
-    ::ShowWindow(hwnd_.get(), SW_MAXIMIZE);
-  }
 }
 
 void WebviewWindow::getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer)
