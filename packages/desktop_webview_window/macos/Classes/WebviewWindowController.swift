@@ -16,7 +16,7 @@ class WebviewWindowController: NSWindowController {
 
   private let width, height: Int
 
-  private var windowPosX, windowPosY: Int
+  private var windowPosX, windowPosY: Int?
 
   private var titleBarHeight: Int
 
@@ -28,7 +28,7 @@ class WebviewWindowController: NSWindowController {
 
   init(viewId: Int64, methodChannel: FlutterMethodChannel,
        width: Int, height: Int,
-        windowPosX: Int, windowPosY: Int,
+        windowPosX: Int?, windowPosY: Int?,
        title: String, titleBarHeight: Int,
        titleBarTopPadding: Int) {
     self.viewId = viewId
@@ -61,16 +61,15 @@ class WebviewWindowController: NSWindowController {
 
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
+
+    let screenFrame = NSScreen.main?.frame
+    let windowFrame = window?.frame
+    let centerX = screenFrame!.origin.x
+    let centerY = (screenFrame!.height - windowFrame!.height) / 2
+
     //set window position
-    var x = CGFloat(integerLiteral: windowPosX)
-    var y = CGFloat(integerLiteral: windowPosY)
-
-    // let screenFrame = NSScreen.main?.frame
-    // let windowFrame = window?.frame
-    // let x = screenFrame!.origin.x
-    // let y = (screenFrame!.height - windowFrame!.height) / 2
-
-    // window?.setFrameTopLeftPoint(NSPoint(x: x, y: y))
+    var x = CGFloat(integerLiteral: windowPosX) ?? centerX
+    var y = CGFloat(integerLiteral: windowPosY) ?? centerY
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     // window?.center()
@@ -121,13 +120,6 @@ class WebviewWindowController: NSWindowController {
     "WebviewWindowController"
   }
 
-  //return position of the webview
-  func getPosition() -> [String: Int] {
-    let frame = window?.frame
-    let x = Int(frame!.origin.x)
-    let y = Int(frame!.origin.y)
-    return ["x": x, "y": y]
-  }
 }
 
 extension WebviewWindowController: NSWindowDelegate {
