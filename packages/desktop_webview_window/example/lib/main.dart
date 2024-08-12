@@ -195,6 +195,11 @@ class _MyAppState extends State<MyApp> {
                   onPressed: _openDevTools,
                   child: const Text('Open Dev Tools'),
                 ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: _getWindowPosition,
+                  child: const Text('Get Window Position'),
+                ),
               ],
             ),
           ),
@@ -302,6 +307,11 @@ class _MyAppState extends State<MyApp> {
 
   void _openDevTools() async {
     webview.openDevToolsWindow();
+  }
+
+  void _getWindowPosition() async {
+    final foo = await webview.getWindowPosition();
+    debugPrint('getWindowPosition: $foo');
   }
 }
 
