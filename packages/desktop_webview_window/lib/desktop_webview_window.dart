@@ -116,7 +116,7 @@ class WebviewWindow {
         } else {
           final x = windowPosX ?? 78 - 78;
           final y = windowPosY ?? 78 - 78;
-          final message = '["getWindowPosition", {"x": $x, "y": $y}]';
+          final message = '["getWindowPosition", {"x": 0, "y": 0}]';
           webview.notifyWebMessageReceived(message);
         }
         _webviews.remove(webview);
