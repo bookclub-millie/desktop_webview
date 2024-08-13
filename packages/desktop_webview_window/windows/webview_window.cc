@@ -54,7 +54,7 @@ WebviewWindow::~WebviewWindow()
 
 void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int width,
                                   const std::wstring &userDataFolder,
-                                  int windowPosX, int windowPosY, bool usePluginDefaultBehaviour,
+                                  int windowPosX, int windowPosY, bool useWindowPositionAndSize,
                                   bool openMaximized, CreateCallback callback)
 {
 
@@ -68,27 +68,28 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
   double scale_factor = dpi / 96.0;
 
-  if (usePluginDefaultBehaviour)
-  {
-    hwnd_ = wil::unique_hwnd(::CreateWindow(
-        kWebViewWindowClassName, title.c_str(),
-        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        CW_USEDEFAULT, CW_USEDEFAULT,
-        Scale(width, scale_factor), Scale(height, scale_factor),
-        nullptr, nullptr, GetModuleHandle(nullptr), this));
-  }
-  else
-  {
-    DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-    if (openMaximized)
-      dwStyle |= WS_MAXIMIZE;
-    hwnd_ = wil::unique_hwnd(::CreateWindow(
-        kWebViewWindowClassName, title.c_str(),
-        dwStyle,
-        windowPosX, windowPosY,
-        width, height,
-        nullptr, nullptr, GetModuleHandle(nullptr), this));
-  }
+  DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+  if (openMaximized)
+    dwStyle |= WS_MAXIMIZE;
+
+  // if (useWindowPositionAndSize)
+  // {
+  //   hwnd_ = wil::unique_hwnd(::CreateWindow(
+  //       kWebViewWindowClassName, title.c_str(),
+  //       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+  //       CW_USEDEFAULT, CW_USEDEFAULT,
+  //       Scale(width, scale_factor), Scale(height, scale_factor),
+  //       nullptr, nullptr, GetModuleHandle(nullptr), this));
+  // }
+  // else
+  // {
+  hwnd_ = wil::unique_hwnd(::CreateWindow(
+      kWebViewWindowClassName, title.c_str(),
+      dwStyle,
+      windowPosX, windowPosY,
+      width, height,
+      nullptr, nullptr, GetModuleHandle(nullptr), this));
+  // }
   if (!hwnd_)
   {
     callback(false);
@@ -98,10 +99,10 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // Centered window on screen.
   RECT rc;
   GetClientRect(hwnd_.get(), &rc);
-  if (usePluginDefaultBehaviour)
+  if (!useWindowPositionAndSize && !openMaximized)
   {
-    ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
-    SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+    // ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
+    // SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
   }
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
@@ -138,13 +139,34 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   ShowWindow(title_bar_handle, SW_SHOW);
 
   assert(hwnd_ != nullptr);
-  SetWindowDisplayAffinity(hwnd_.get(), WDA_MONITOR);
+  // SetWindowDisplayAffinity(hwnd_.get(), WDA_MONITOR);
   ShowWindow(hwnd_.get(), SW_SHOW);
   UpdateWindow(hwnd_.get());
 }
 
 void WebviewWindow::SetBrightness(int brightness)
 {
+}
+
+void WebviewWindow::moveWebviewWindow(int left, int top, int width, int height)
+{
+  ::SetWindowPos(hwnd_.get(), nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
+void WebviewWindow::getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer)
+{
+  RECT rc;
+  GetWindowRect(hwnd_.get(), &rc);
+
+  std::unique_ptr<WINDOWPLACEMENT> wp(new WINDOWPLACEMENT);
+  GetWindowPlacement(hwnd_.get(), wp.get());
+  std::map<flutter::EncodableValue, flutter::EncodableValue> m{
+      {"x", rc.left},
+      {"y", rc.top},
+      {"width", rc.right - rc.left},
+      {"height", rc.bottom - rc.top},
+      {"maximized", wp->showCmd == SW_MAXIMIZE}};
+  completer->Success(flutter::EncodableValue(m));
 }
 
 // static
@@ -201,6 +223,12 @@ WebviewWindow::MessageHandler(
       destroyed_ = true;
       auto args = flutter::EncodableMap{
           {flutter::EncodableValue("id"), flutter::EncodableValue(window_id_)}};
+      // add position X and Y to args
+      RECT rc;
+      GetWindowRect(hwnd, &rc);
+      args[flutter::EncodableValue("windowPosX")] = flutter::EncodableValue(rc.left);
+      args[flutter::EncodableValue("windowPosY")] = flutter::EncodableValue(rc.top);
+
       method_channel_->InvokeMethod(
           "onWindowClose",
           std::make_unique<flutter::EncodableValue>(args));

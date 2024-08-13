@@ -23,10 +23,10 @@
 #include "flutter_view.h"
 #include "web_view.h"
 
-class WebviewWindow {
+class WebviewWindow
+{
 
- public:
-
+public:
   using MethodChannelPtr = std::shared_ptr<flutter::MethodChannel<flutter::EncodableValue>>;
 
   WebviewWindow(MethodChannelPtr method_channel,
@@ -55,12 +55,16 @@ class WebviewWindow {
 
   void SetBrightness(int brightness);
 
-  [[nodiscard]] const std::unique_ptr<webview_window::WebView> &GetWebView() const {
+  void moveWebviewWindow(int left, int top, int width, int height);
+
+  void getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
+
+  [[nodiscard]] const std::unique_ptr<webview_window::WebView> &GetWebView() const
+  {
     return web_view_;
   }
 
- private:
-
+private:
   // Retrieves a class instance pointer for |window|
   static WebviewWindow *GetThisFromHandle(HWND window) noexcept;
 
@@ -93,7 +97,6 @@ class WebviewWindow {
   LRESULT HandleNCHitTest(int x, int y) noexcept;
 
   void SetBorderless() noexcept;
-
 };
 
 #endif //_WEBVIEW_WINDOW_WEBVIEW_WINDOW_H_

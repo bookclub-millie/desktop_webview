@@ -35,6 +35,7 @@ class WebviewWindow {
     _inited = true;
     _channel.setMethodCallHandler((call) async {
       try {
+        debugPrint("method1: ${call.method} args: ${call.arguments}");
         return await _handleMethodCall(call);
       } catch (e, s) {
         debugPrint("method: ${call.method} args: ${call.arguments}");
@@ -108,9 +109,18 @@ class WebviewWindow {
     }
     switch (call.method) {
       case "onWindowClose":
+        final windowPosX = args['windowPosX'] as int?;
+        final windowPosY = args['windowPosY'] as int?;
+        if (Platform.isMacOS) {
+          webview.onJavaScriptMessage('getWindowPosition', '{"x": $windowPosX, "y": $windowPosY}');
+        } else {
+          final message = '["getWindowPosition", {"x": "$windowPosX", "y": "$windowPosY"}]';
+          webview.notifyWebMessageReceived(message);
+        }
         _webviews.remove(webview);
         webview.onClosed();
         break;
+
       case "onJavaScriptMessage":
         webview.onJavaScriptMessage(args['name'], args['body']);
         break;
