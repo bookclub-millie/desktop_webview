@@ -97,8 +97,8 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   }
 
   // Centered window on screen.
-  // RECT rc;
-  // GetClientRect(hwnd_.get(), &rc);
+  RECT rc;
+  GetClientRect(hwnd_.get(), &rc);
   // if (!openMaximized)
   // {
   //   ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
