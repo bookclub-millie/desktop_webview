@@ -112,7 +112,7 @@ class WebviewWindow {
         final windowPosX = args['windowPosX'] as int?;
         final windowPosY = args['windowPosY'] as int?;
         if (Platform.isMacOS) {
-          webview.onJavaScriptMessage('getWindowPosition', '{"x": "$windowPosX", "y": "$windowPosY"}');
+          webview.onJavaScriptMessage('getWindowPosition', '{"x": $windowPosX, "y": $windowPosY}');
         } else {
           final message = '["getWindowPosition", {"x": "$windowPosX", "y": "$windowPosY"}]';
           webview.notifyWebMessageReceived(message);
