@@ -54,7 +54,7 @@ WebviewWindow::~WebviewWindow()
 
 void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int width,
                                   const std::wstring &userDataFolder,
-                                  int windowPosX, int windowPosY,
+                                  int windowPosX, int windowPosY, bool useWindowPositionAndSize,
                                   bool openMaximized, CreateCallback callback)
 {
 
@@ -99,11 +99,11 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // Centered window on screen.
   RECT rc;
   GetClientRect(hwnd_.get(), &rc);
-  // if (!openMaximized)
-  // {
-  //   ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
-  //   SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-  // }
+  if (!useWindowPositionAndSize && !openMaximized)
+  {
+    // ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
+    // SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+  }
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
@@ -124,10 +124,10 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
 
   auto web_view_handle = web_view_->NativeWindow().get();
   SetParent(web_view_handle, hwnd_.get());
-  // MoveWindow(web_view_handle, 0, title_bar_height,
-  //            rc.right - rc.left,
-  //            rc.bottom - rc.top - title_bar_height,
-  //            true);
+  MoveWindow(web_view_handle, 0, title_bar_height,
+             rc.right - rc.left,
+             rc.bottom - rc.top - title_bar_height,
+             true);
   ShowWindow(web_view_handle, SW_SHOW);
 
   // Create the title bar view.
