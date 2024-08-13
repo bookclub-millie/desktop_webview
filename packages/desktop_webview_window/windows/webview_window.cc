@@ -124,10 +124,10 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
 
   auto web_view_handle = web_view_->NativeWindow().get();
   SetParent(web_view_handle, hwnd_.get());
-  MoveWindow(web_view_handle, 0, title_bar_height,
-             rc.right - rc.left,
-             rc.bottom - rc.top - title_bar_height,
-             true);
+  // MoveWindow(web_view_handle, 0, title_bar_height,
+  //            rc.right - rc.left,
+  //            rc.bottom - rc.top - title_bar_height,
+  //            true);
   ShowWindow(web_view_handle, SW_SHOW);
 
   // Create the title bar view.
