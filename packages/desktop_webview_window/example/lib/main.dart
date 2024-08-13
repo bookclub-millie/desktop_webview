@@ -69,6 +69,8 @@ class _MyAppState extends State<MyApp> {
                   configuration: CreateConfiguration(
                     windowHeight: 1280,
                     windowWidth: 720,
+                    windowPosX: 0,
+                    windowPosY: 0,
                     title: "ExampleTestWindow",
                     titleBarTopPadding: Platform.isMacOS ? 20 : 0,
                     userDataFolderWindows: await _getWebViewPath(),
@@ -193,6 +195,11 @@ class _MyAppState extends State<MyApp> {
                   onPressed: _openDevTools,
                   child: const Text('Open Dev Tools'),
                 ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: _getWindowPosition,
+                  child: const Text('Get Window Position'),
+                ),
               ],
             ),
           ),
@@ -213,8 +220,8 @@ class _MyAppState extends State<MyApp> {
         title: "Pizza Hawai ist ein Vebrechen gegen die Menschlichkeit!",
         titleBarHeight: 0,
         usePluginDefaultBehaviour: false,
-        windowWidth: rect.ref.right-rect.ref.left,
-        windowHeight: rect.ref.bottom-rect.ref.top,
+        windowWidth: rect.ref.right - rect.ref.left,
+        windowHeight: rect.ref.bottom - rect.ref.top,
         windowPosX: rect.ref.left,
         windowPosY: rect.ref.top,
         openMaximized: false,
@@ -300,6 +307,11 @@ class _MyAppState extends State<MyApp> {
 
   void _openDevTools() async {
     webview.openDevToolsWindow();
+  }
+
+  void _getWindowPosition() async {
+    final foo = await webview.getWindowPosition();
+    debugPrint('getWindowPosition: $foo');
   }
 }
 
