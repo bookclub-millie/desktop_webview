@@ -33,14 +33,19 @@ public class DesktopWebviewWindowPlugin: NSObject, FlutterPlugin {
       let title = argument["title"] as? String ?? ""
       let titleBarHeight = argument["titleBarHeight"] as? Int ?? 50
       let titleBarTopPadding = argument["titleBarTopPadding"] as? Int ?? 0
+      let windowPosX = argument["windowPosX"] as? Int ?? 0
+      let windowPosY = argument["windowPosY"] as? Int ?? 0
 
       let controller = WebviewWindowController(
         viewId: viewId, methodChannel: methodChannel,
-        width: width, height: height, title: title,
+        width: width, height: height, 
+        windowPosX: windowPosX, windowPosY: windowPosY,
+        title: title,
         titleBarHeight: titleBarHeight, titleBarTopPadding: titleBarTopPadding
       )
       controller.webviewPlugin = self
       webviews[viewId] = controller
+
       controller.showWindow(nil)
       result(viewId)
       viewId += 1

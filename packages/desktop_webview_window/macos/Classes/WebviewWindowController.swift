@@ -16,22 +16,27 @@ class WebviewWindowController: NSWindowController {
 
   private let width, height: Int
 
-  private let titleBarHeight: Int
-  
+  private var windowPosX, windowPosY: Int
+
+  private var titleBarHeight: Int
+
   private let titleBarTopPadding: Int
-  
+
   private let title: String
-  
+
   public weak var webviewPlugin: DesktopWebviewWindowPlugin?
 
   init(viewId: Int64, methodChannel: FlutterMethodChannel,
        width: Int, height: Int,
+        windowPosX: Int, windowPosY: Int,
        title: String, titleBarHeight: Int,
        titleBarTopPadding: Int) {
     self.viewId = viewId
     self.methodChannel = methodChannel
     self.width = width
     self.height = height
+    self.windowPosX = windowPosX
+    self.windowPosY = windowPosY
     self.titleBarHeight = titleBarHeight
     self.titleBarTopPadding = titleBarTopPadding
     self.title = title
@@ -56,7 +61,18 @@ class WebviewWindowController: NSWindowController {
 
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
-    window?.center()
+
+    // let screenFrame = NSScreen.main?.frame
+    // let windowFrame = window?.frame
+    // let centerX = screenFrame!.origin.x
+    // let centerY = (screenFrame!.height - windowFrame!.height) / 2
+
+    //set window position
+    var x = CGFloat(integerLiteral: windowPosX)
+    var y = CGFloat(integerLiteral: windowPosY)
+
+    window?.setFrameOrigin(NSPoint(x: x, y: y))
+    // window?.center()
     window?.title = title
 
     window?.isReleasedWhenClosed = false
@@ -103,12 +119,20 @@ class WebviewWindowController: NSWindowController {
   override var windowNibName: NSNib.Name? {
     "WebviewWindowController"
   }
+
 }
 
 extension WebviewWindowController: NSWindowDelegate {
+
+  func windowDidMove(_ notification: Notification) {
+    let origin = window?.frame.origin
+    windowPosX = Int(origin?.x ?? 0)
+    windowPosY = Int(origin?.y ?? 0)
+  }
+
   func windowWillClose(_ notification: Notification) {
     webViewController.destroy()
-    methodChannel.invokeMethod("onWindowClose", arguments: ["id": viewId])
+    methodChannel.invokeMethod("onWindowClose", arguments: ["id": viewId, "windowPosX": windowPosX, "windowPosY": windowPosY])
     DispatchQueue.main.async {
       self.webviewPlugin?.onWebviewWindowClose(viewId: self.viewId, wc: self)
     }
