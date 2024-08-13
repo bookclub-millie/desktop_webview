@@ -54,7 +54,7 @@ WebviewWindow::~WebviewWindow()
 
 void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int width,
                                   const std::wstring &userDataFolder,
-                                  int windowPosX, int windowPosY, bool useWindowPositionAndSize,
+                                  int windowPosX, int windowPosY,
                                   bool openMaximized, CreateCallback callback)
 {
 
@@ -72,24 +72,24 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   if (openMaximized)
     dwStyle |= WS_MAXIMIZE;
 
-  if (useWindowPositionAndSize)
-  {
-    hwnd_ = wil::unique_hwnd(::CreateWindow(
-        kWebViewWindowClassName, title.c_str(),
-        WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        CW_USEDEFAULT, CW_USEDEFAULT,
-        Scale(width, scale_factor), Scale(height, scale_factor),
-        nullptr, nullptr, GetModuleHandle(nullptr), this));
-  }
-  else
-  {
-    hwnd_ = wil::unique_hwnd(::CreateWindow(
-        kWebViewWindowClassName, title.c_str(),
-        dwStyle,
-        windowPosX, windowPosY,
-        width, height,
-        nullptr, nullptr, GetModuleHandle(nullptr), this));
-  }
+  // if (useWindowPositionAndSize)
+  // {
+  //   hwnd_ = wil::unique_hwnd(::CreateWindow(
+  //       kWebViewWindowClassName, title.c_str(),
+  //       WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+  //       CW_USEDEFAULT, CW_USEDEFAULT,
+  //       Scale(width, scale_factor), Scale(height, scale_factor),
+  //       nullptr, nullptr, GetModuleHandle(nullptr), this));
+  // }
+  // else
+  // {
+  hwnd_ = wil::unique_hwnd(::CreateWindow(
+      kWebViewWindowClassName, title.c_str(),
+      dwStyle,
+      windowPosX, windowPosY,
+      width, height,
+      nullptr, nullptr, GetModuleHandle(nullptr), this));
+  // }
   if (!hwnd_)
   {
     callback(false);
@@ -97,13 +97,13 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   }
 
   // Centered window on screen.
-  RECT rc;
-  GetClientRect(hwnd_.get(), &rc);
-  if (!useWindowPositionAndSize && !openMaximized)
-  {
-    ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
-    SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-  }
+  // RECT rc;
+  // GetClientRect(hwnd_.get(), &rc);
+  // if (!openMaximized)
+  // {
+  //   ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
+  //   SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+  // }
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
