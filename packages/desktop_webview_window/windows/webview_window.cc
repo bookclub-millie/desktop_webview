@@ -226,8 +226,8 @@ WebviewWindow::MessageHandler(
       // add position X and Y to args
       RECT rc;
       GetWindowRect(hwnd, &rc);
-      args[flutter::EncodableValue("x")] = flutter::EncodableValue(rc.left);
-      args[flutter::EncodableValue("y")] = flutter::EncodableValue(rc.top);
+      args[flutter::EncodableValue("windowPosX")] = flutter::EncodableValue(rc.left);
+      args[flutter::EncodableValue("windowPosY")] = flutter::EncodableValue(rc.top);
 
       method_channel_->InvokeMethod(
           "onWindowClose",
