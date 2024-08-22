@@ -67,8 +67,8 @@ class WebviewWindowController: NSWindowController {
 
 
     //set window position
-    var x = CGFloat(integerLiteral: windowPosX)
-    var y = CGFloat(integerLiteral: windowPosY)
+    let x = CGFloat(integerLiteral: windowPosX)
+    let y = CGFloat(integerLiteral: windowPosY)
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     window?.title = title
