@@ -11,6 +11,7 @@
 
 #include "strconv.h"
 #include "utils.h"
+#include <cmath>
 
 #include "include/desktop_webview_window/desktop_webview_window_plugin.h"
 
@@ -114,9 +115,8 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   SetWindowLong(hwnd_.get(), GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
 
   // Set the opacity level. The third parameter is the opacity level (0-255).
-  // 128 is approximately 50% opacity.
-  SetLayeredWindowAttributes(hwnd_.get(), 0, (opacity * 2.55).round(), LWA_ALPHA);
-
+  double result = round(opacity * 2.55);
+  SetLayeredWindowAttributes(hwnd_.get(), 0, result, LWA_ALPHA);
   // SetLayeredWindowAttributes(hwnd, 0, (opacity * 2.55).round(), LWA_ALPHA);
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
