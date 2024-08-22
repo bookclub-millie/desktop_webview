@@ -32,7 +32,7 @@ class WebviewWindowController: NSWindowController {
        width: Int, height: Int,
         windowPosX: Int, windowPosY: Int,
        title: String, titleBarHeight: Int,
-       titleBarTopPadding: Int, opacity: CGFloat) {
+       titleBarTopPadding: Int, opacity: int) {
     self.viewId = viewId
     self.methodChannel = methodChannel
     self.width = width
@@ -72,7 +72,9 @@ class WebviewWindowController: NSWindowController {
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     window?.title = title
-    window?.alphaValue = opacity
+    let alphaValue = CGFloat(opacity) / 100.0
+
+    window?.alphaValue = alphaValue
 
     window?.isReleasedWhenClosed = false
     window?.delegate = self

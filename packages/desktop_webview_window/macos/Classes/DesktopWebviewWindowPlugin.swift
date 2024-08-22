@@ -35,7 +35,7 @@ public class DesktopWebviewWindowPlugin: NSObject, FlutterPlugin {
       let titleBarTopPadding = argument["titleBarTopPadding"] as? Int ?? 0
       let windowPosX = argument["windowPosX"] as? Int ?? 0
       let windowPosY = argument["windowPosY"] as? Int ?? 0
-      let opacity = argument["opacity"] as? Double ?? 1.0
+      let opacity = argument["opacity"] as? int ?? 100
 
       let controller = WebviewWindowController(
         viewId: viewId, methodChannel: methodChannel,
