@@ -72,8 +72,7 @@ class WebviewWindowController: NSWindowController {
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     window?.title = title
-
-    window?.opacity(opacity)
+    window?.alphaValue = opacity
 
     window?.isReleasedWhenClosed = false
     window?.delegate = self
