@@ -67,6 +67,7 @@ void WebviewWindowPlugin::HandleMethodCall(
     auto openMaximized = std::get<bool>(arguments->at(flutter::EncodableValue("openMaximized")));
     auto windowPosX = arguments->at(flutter::EncodableValue("windowPosX")).LongValue();
     auto windowPosY = arguments->at(flutter::EncodableValue("windowPosY")).LongValue();
+    auto opacity = arguments->at(flutter::EncodableValue("opacity")).LongValue();
 
     auto window_id = next_window_id_;
     auto window = std::make_unique<WebviewWindow>(
@@ -78,7 +79,7 @@ void WebviewWindowPlugin::HandleMethodCall(
     std::shared_ptr<flutter::MethodResult<flutter::EncodableValue>> result2(std::move(result));
     window->CreateAndShow(
         utf8_to_wide(title), int(height), int(width), utf8_to_wide(userDataFolder),
-        int(windowPosX), int(windowPosY), usePluginDefaultBehaviour, openMaximized,
+        int(windowPosX), int(windowPosY), usePluginDefaultBehaviour, openMaximized, int(opacity),
         [this, window_id, result(result2)](bool succeed) mutable
         {
           if (!succeed)

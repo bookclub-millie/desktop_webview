@@ -55,6 +55,7 @@ WebviewWindow::~WebviewWindow()
 void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int width,
                                   const std::wstring &userDataFolder,
                                   int windowPosX, int windowPosY, bool useWindowPositionAndSize,
+                                  int opacity,
                                   bool openMaximized, CreateCallback callback)
 {
 
@@ -104,6 +105,19 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
     // ClipOrCenterRectToMonitor(&rc, MONITOR_CENTER);
     // SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
   }
+
+  // Get the current extended window style.
+  LONG exStyle = GetWindowLong(hwnd_.get(), GWL_EXSTYLE);
+
+  // SetWindowLongPtr(hwnd, GWL_EXSTYLE, GetWindowLongPtr(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
+  // Set the WS_EX_LAYERED style.
+  SetWindowLong(hwnd_.get(), GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+
+  // Set the opacity level. The third parameter is the opacity level (0-255).
+  // 128 is approximately 50% opacity.
+  SetLayeredWindowAttributes(hwnd_.get(), 0, (opacity * 2.55).round(), LWA_ALPHA);
+
+  // SetLayeredWindowAttributes(hwnd, 0, (opacity * 2.55).round(), LWA_ALPHA);
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
