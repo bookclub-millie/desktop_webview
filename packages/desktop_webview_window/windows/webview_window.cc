@@ -108,16 +108,17 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   }
 
   // Get the current extended window style.
-  LONG exStyle = GetWindowLong(hwnd_.get(), GWL_EXSTYLE);
+  LONG exStyle = GetWindowLong(hwnd_, GWL_EXSTYLE);
 
   // SetWindowLongPtr(hwnd, GWL_EXSTYLE, GetWindowLongPtr(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
   // Set the WS_EX_LAYERED style.
-  SetWindowLong(hwnd_.get(), GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
+  SetWindowLong(hwnd_, GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
 
   // Set the opacity level. The third parameter is the opacity level (0-255).
-  double result = static_cast<double>(round(opacity * 2.55));
-  SetLayeredWindowAttributes(hwnd_.get(), 0, result, LWA_ALPHA);
-  // SetLayeredWindowAttributes(hwnd, 0, (opacity * 2.55).round(), LWA_ALPHA);
+  // double result = static_cast<double>(round(opacity * 2.55));
+  // SetLayeredWindowAttributes(hwnd_.get(), 0, result, LWA_ALPHA);
+  auto result = std::round(opacity * 2.55);
+  SetLayeredWindowAttributes(hwnd_, 0, result, LWA_ALPHA);
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
