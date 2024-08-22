@@ -24,13 +24,15 @@ class WebviewWindowController: NSWindowController {
 
   private let title: String
 
+  private let opacity: CGFloat
+
   public weak var webviewPlugin: DesktopWebviewWindowPlugin?
 
   init(viewId: Int64, methodChannel: FlutterMethodChannel,
        width: Int, height: Int,
         windowPosX: Int, windowPosY: Int,
        title: String, titleBarHeight: Int,
-       titleBarTopPadding: Int) {
+       titleBarTopPadding: Int, opacity: CGFloat) {
     self.viewId = viewId
     self.methodChannel = methodChannel
     self.width = width
@@ -40,6 +42,7 @@ class WebviewWindowController: NSWindowController {
     self.titleBarHeight = titleBarHeight
     self.titleBarTopPadding = titleBarTopPadding
     self.title = title
+    self.opacity = opacity
     super.init(window: nil)
   }
 
@@ -62,18 +65,15 @@ class WebviewWindowController: NSWindowController {
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
 
-    // let screenFrame = NSScreen.main?.frame
-    // let windowFrame = window?.frame
-    // let centerX = screenFrame!.origin.x
-    // let centerY = (screenFrame!.height - windowFrame!.height) / 2
 
     //set window position
     var x = CGFloat(integerLiteral: windowPosX)
     var y = CGFloat(integerLiteral: windowPosY)
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
-    // window?.center()
     window?.title = title
+
+    window?.opacity(opacity)
 
     window?.isReleasedWhenClosed = false
     window?.delegate = self

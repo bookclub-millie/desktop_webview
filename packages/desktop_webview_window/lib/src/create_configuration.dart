@@ -20,6 +20,8 @@ class CreateConfiguration {
   final bool usePluginDefaultBehaviour;
   final bool openMaximized;
 
+  final double opacity;
+
   const CreateConfiguration({
     this.windowWidth = 1280,
     this.windowHeight = 720,
@@ -31,6 +33,7 @@ class CreateConfiguration {
     this.userDataFolderWindows = 'webview_window_WebView2',
     this.usePluginDefaultBehaviour = true,
     this.openMaximized = false,
+    this.opacity = 1.0,
   });
 
   factory CreateConfiguration.platform() {
@@ -50,5 +53,6 @@ class CreateConfiguration {
         "userDataFolderWindows": userDataFolderWindows,
         "usePluginDefaultBehaviour": usePluginDefaultBehaviour,
         "openMaximized": openMaximized,
+        "opacity": opacity,
       };
 }
