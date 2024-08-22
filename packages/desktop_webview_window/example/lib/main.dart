@@ -74,7 +74,7 @@ class _MyAppState extends State<MyApp> {
                     title: "ExampleTestWindow",
                     titleBarTopPadding: Platform.isMacOS ? 20 : 0,
                     userDataFolderWindows: await _getWebViewPath(),
-                    opacity: 0.5,
+                    opacity: 50,
                   ),
                 );
                 webview

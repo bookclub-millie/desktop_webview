@@ -24,7 +24,7 @@ class WebviewWindowController: NSWindowController {
 
   private let title: String
 
-  private let opacity: CGFloat
+  private let opacity: Int
 
   public weak var webviewPlugin: DesktopWebviewWindowPlugin?
 
@@ -32,7 +32,7 @@ class WebviewWindowController: NSWindowController {
        width: Int, height: Int,
         windowPosX: Int, windowPosY: Int,
        title: String, titleBarHeight: Int,
-       titleBarTopPadding: Int, opacity: int) {
+       titleBarTopPadding: Int, opacity: Int) {
     self.viewId = viewId
     self.methodChannel = methodChannel
     self.width = width
