@@ -198,8 +198,8 @@ WebviewWindow::WndProc(
     auto window_struct = reinterpret_cast<CREATESTRUCT *>(lparam);
     SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window_struct->lpCreateParams));
 
-    auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
-    that->hwnd_ = window;
+    // auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
+    // that->hwnd_ = window;
   }
   else if (WebviewWindow *that = GetThisFromHandle(window))
   {
