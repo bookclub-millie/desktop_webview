@@ -114,10 +114,8 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // SetWindowLongPtr(hwnd, GWL_EXSTYLE, GetWindowLongPtr(hwnd, GWL_EXSTYLE) | WS_EX_LAYERED);
   // Set the WS_EX_LAYERED style.
   SetWindowLongPtr(hwnd_.get(), GWL_EXSTYLE, exStyle | WS_EX_LAYERED);
-  // auto result = std::round(opacity * 2.55);
-  // SetLayeredWindowAttributes(hwnd_.get(), 0, static_cast<BYTE>(result), LWA_ALPHA);
-
-  SetLayeredWindowAttributes(hwnd_.get(), 0, 128, LWA_ALPHA);
+  auto result = std::round(opacity * 2.55);
+  SetLayeredWindowAttributes(hwnd_.get(), 0, static_cast<BYTE>(result), LWA_ALPHA);
 
   SetWindowPos(hwnd_.get(), nullptr, windowPosX, windowPosY, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 
