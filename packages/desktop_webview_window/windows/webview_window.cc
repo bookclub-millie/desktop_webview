@@ -118,7 +118,8 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // SetLayeredWindowAttributes(hwnd_.get(), 0, static_cast<BYTE>(result), LWA_ALPHA);
 
   SetLayeredWindowAttributes(hwnd_.get(), 0, 128, LWA_ALPHA);
-  SetWindowPos(hwnd_.get(), nullptr, windowPosX, windowPosY, width, height, dwStyle);
+
+  SetWindowPos(hwnd_.get(), nullptr, windowPosX, windowPosY, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
@@ -197,8 +198,8 @@ WebviewWindow::WndProc(
     auto window_struct = reinterpret_cast<CREATESTRUCT *>(lparam);
     SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window_struct->lpCreateParams));
 
-    //    auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
-    //    that->hwnd_ = window;
+    auto that = static_cast<WebviewWindow *>(window_struct->lpCreateParams);
+    that->hwnd_ = window;
   }
   else if (WebviewWindow *that = GetThisFromHandle(window))
   {
