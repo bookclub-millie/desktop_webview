@@ -57,6 +57,8 @@ public:
 
   void moveWebviewWindow(int left, int top, int width, int height);
 
+  void bringToForeground();
+
   void getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
   [[nodiscard]] const std::unique_ptr<webview_window::WebView> &GetWebView() const

@@ -316,14 +316,6 @@ namespace webview_window
     }
   }
 
-  void WebView::SetSize(int width, int height)
-  {
-    if (webview_controller_)
-    {
-      webview_controller_->put_Bounds(RECT{0, 0, width, height});
-    }
-  }
-
   bool WebView::CanGoBack() const
   {
     if (webview_)

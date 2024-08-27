@@ -53,8 +53,6 @@ namespace webview_window
 
                 void FullScreen();
 
-                void SetSize();
-
                 void ExecuteJavaScript(const std::wstring &javaScript,
                                        std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
