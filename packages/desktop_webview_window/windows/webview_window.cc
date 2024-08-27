@@ -153,6 +153,11 @@ void WebviewWindow::moveWebviewWindow(int left, int top, int width, int height)
   ::SetWindowPos(hwnd_.get(), nullptr, left, top, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 }
 
+void WebviewWindow::bringToForeground()
+{
+  SetForegroundWindow(hwnd_.get());
+}
+
 void WebviewWindow::getWindowPosition(std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer)
 {
   RECT rc;
