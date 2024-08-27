@@ -17,78 +17,79 @@
 
 #include "WebView2.h"
 
-namespace webview_window {
+namespace webview_window
+{
 
-class WebView {
+        class WebView
+        {
 
- public:
+        public:
+                WebView(std::shared_ptr<flutter::MethodChannel<flutter::EncodableValue>> method_channel,
+                        int64_t web_view_id,
+                        std::wstring userDataFolder,
+                        std::function<void(HRESULT)> on_web_view_created_callback);
 
-  WebView(std::shared_ptr<flutter::MethodChannel<flutter::EncodableValue>> method_channel,
-          int64_t web_view_id,
-          std::wstring userDataFolder,
-          std::function<void(HRESULT)> on_web_view_created_callback
-  );
+                virtual ~WebView();
 
-  virtual ~WebView();
+                [[nodiscard]] const wil::unique_hwnd &NativeWindow() const { return view_window_; }
 
-  [[nodiscard]] const wil::unique_hwnd &NativeWindow() const { return view_window_; }
+                void UpdateBounds();
 
-  void UpdateBounds();
+                void Navigate(const std::wstring &url);
 
-  void Navigate(const std::wstring &url);
+                void AddScriptToExecuteOnDocumentCreated(const std::wstring &javaScript);
 
-  void AddScriptToExecuteOnDocumentCreated(const std::wstring &javaScript);
+                void SetApplicationNameForUserAgent(const std::wstring &application_name);
 
-  void SetApplicationNameForUserAgent(const std::wstring &application_name);
+                void GoBack();
 
-  void GoBack();
+                void GoForward();
 
-  void GoForward();
+                void Reload();
 
-  void Reload();
+                void Stop();
 
-  void Stop();
+                void openDevToolsWindow();
 
-  void openDevToolsWindow();
+                void FullScreen();
 
-  void FullScreen();
+                void SetSize();
 
-  void ExecuteJavaScript(const std::wstring &javaScript,
-                         std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
+                void ExecuteJavaScript(const std::wstring &javaScript,
+                                       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
-  void PostWebMessageAsString(const std::wstring &webmessage,
-          std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
+                void PostWebMessageAsString(const std::wstring &webmessage,
+                                            std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
-  void PostWebMessageAsJson(const std::wstring &webmessage,
-      std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
+                void PostWebMessageAsJson(const std::wstring &webmessage,
+                                          std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> completer);
 
- private:
-  wil::unique_hwnd view_window_;
+        private:
+                wil::unique_hwnd view_window_;
 
-  // Pointer to WebViewController
-  wil::com_ptr<ICoreWebView2Controller> webview_controller_;
+                // Pointer to WebViewController
+                wil::com_ptr<ICoreWebView2Controller> webview_controller_;
 
-  // Pointer to WebView
-  wil::com_ptr<ICoreWebView2> webview_;
+                // Pointer to WebView
+                wil::com_ptr<ICoreWebView2> webview_;
 
-  std::wstring default_user_agent_;
+                std::wstring default_user_agent_;
 
-  std::shared_ptr<flutter::MethodChannel<flutter::EncodableValue>> method_channel_;
+                std::shared_ptr<flutter::MethodChannel<flutter::EncodableValue>> method_channel_;
 
-  int64_t web_view_id_;
+                int64_t web_view_id_;
 
-  std::function<void(HRESULT)> on_web_view_created_callback_;
+                std::function<void(HRESULT)> on_web_view_created_callback_;
 
-  std::wstring user_data_folder_;
+                std::wstring user_data_folder_;
 
-  void OnWebviewControllerCreated();
+                void OnWebviewControllerCreated();
 
-  [[nodiscard]] bool CanGoBack() const;
+                [[nodiscard]] bool CanGoBack() const;
 
-  [[nodiscard]] bool CanGoForward() const;
-
-};
+                [[nodiscard]] bool CanGoForward() const;
+        };
 
 }
 
-#endif //WEBVIEW_WINDOW_WINDOWS_WEB_VIEW_H_
+#endif // WEBVIEW_WINDOW_WINDOWS_WEB_VIEW_H_

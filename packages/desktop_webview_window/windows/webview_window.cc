@@ -117,9 +117,9 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   // auto result = std::round(opacity * 2.55);
   // result = 255 - result;
   // SetLayeredWindowAttributes(hwnd_.get(), 0, static_cast<BYTE>(result), LWA_ALPHA);
-  SetLayeredWindowAttributes(hwnd_.get(), 0, 255, LWA_ALPHA);
+  SetLayeredWindowAttributes(hwnd_.get(), 0, 125, LWA_ALPHA);
 
-  SetWindowPos(hwnd_.get(), nullptr, windowPosX, windowPosY, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
+  // SetWindowPos(hwnd_.get(), nullptr, windowPosX, windowPosY, width, height, SWP_NOZORDER | SWP_NOACTIVATE);
 
   auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
