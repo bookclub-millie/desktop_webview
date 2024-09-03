@@ -217,6 +217,22 @@ WebviewWindow::MessageHandler(
 
   switch (message)
   {
+
+    // case WM_CLOSE:
+    // {
+    //   // DestroyWindow(hwnd);
+    //   return 0;
+    // }
+
+  case WM_KEYDOWN:
+  {
+    if (wparam == VK_ESCAPE)
+    {
+      ShowWindow(hwnd, SW_MINIMIZE);
+      return 0;
+    }
+    break;
+  }
   case WM_DESTROY:
   {
     flutter_action_bar_.reset();
@@ -243,22 +259,6 @@ WebviewWindow::MessageHandler(
       }
     }
     return 0;
-  }
-
-  case WM_CLOSE:
-  {
-    // DestroyWindow(hwnd);
-    return 0;
-  }
-
-  case WM_KEYDOWN:
-  {
-    if (wparam == VK_ESCAPE)
-    {
-      ShowWindow(hwnd, SW_MINIMIZE);
-      return 0;
-    }
-    break;
   }
 
   case WM_DPICHANGED:
