@@ -250,6 +250,17 @@ WebviewWindow::MessageHandler(
     // DestroyWindow(hwnd);
     return 0;
   }
+
+  case WM_KEYDOWN:
+  {
+    if (wparam == VK_ESCAPE)
+    {
+      ShowWindow(hwnd, SW_MINIMIZE);
+      return 0;
+    }
+    break;
+  }
+
   case WM_DPICHANGED:
   {
     auto newRectSize = reinterpret_cast<RECT *>(lparam);
