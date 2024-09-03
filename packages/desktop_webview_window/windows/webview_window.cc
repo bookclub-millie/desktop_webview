@@ -244,6 +244,12 @@ WebviewWindow::MessageHandler(
     }
     return 0;
   }
+
+  case WM_CLOSE:
+  {
+    // DestroyWindow(hwnd);
+    return 0;
+  }
   case WM_DPICHANGED:
   {
     auto newRectSize = reinterpret_cast<RECT *>(lparam);
