@@ -312,19 +312,16 @@ namespace webview_window
   {
     if (webview_)
     {
-      // Get the handle to the desktop window.
-      HWND desktop = GetDesktopWindow();
-      RECT desktopRect;
-      GetWindowRect(desktop, &desktopRect); // Get the size of screen.
 
-      // Get the current window style.
-      LONG style = GetWindowLongPtr(webview_, GWL_STYLE);
+      // Assuming hwnd is your window handle
+      SetWindowLongPtr(webview_, GWL_STYLE, WS_POPUP | WS_VISIBLE & ~WS_OVERLAPPEDWINDOW);
 
-      // Change the window style to a borderless window.
-      SetWindowLongPtr(webview_, GWL_STYLE, style & ~WS_OVERLAPPEDWINDOW);
+      // Get the screen size
+      int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+      int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-      // Set the window size to the size of the screen and position it at (0,0).
-      SetWindowPos(webview_, HWND_TOP, 0, 0, desktopRect.right, desktopRect.bottom, SWP_FRAMECHANGED);
+      // Resize the window to cover the entire screen
+      SetWindowPos(webview_, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
     }
   }
 
