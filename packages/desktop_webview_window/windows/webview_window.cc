@@ -228,6 +228,8 @@ WebviewWindow::MessageHandler(
   {
     if (wparam == VK_ESCAPE)
     {
+      // print
+      MessageBox(hwnd, L"Escape key pressed", L"Key Pressed", MB_OK);
       // ShowWindow(hwnd, SW_MINIMIZE);
       return 0;
     }
