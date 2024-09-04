@@ -305,8 +305,8 @@ WebviewWindow::MessageHandler(
   case WM_GETMINMAXINFO:
   {
     MINMAXINFO *minMax = (MINMAXINFO *)lparam;
-    minMax->ptMinTrackSize.x = 320;
-    minMax->ptMinTrackSize.y = 640;
+    minMax->ptMinTrackSize.x = 640; // width
+    minMax->ptMinTrackSize.y = 320; // height
 
     return 0;
   }
