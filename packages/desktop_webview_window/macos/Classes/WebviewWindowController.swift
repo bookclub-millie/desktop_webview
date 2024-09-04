@@ -60,7 +60,7 @@ class WebviewWindowController: NSWindowController {
       titleBarTopPadding: titleBarTopPadding)
 
     window?.setContentSize(NSSize(width: width, height: height))
-    window?.contentMinSize = NSSize(width: 320, height: 320)
+    window?.contentMinSize = NSSize(width: 640, height: 320)
 
     // let screenFrame = NSScreen.main?.frame
     // let windowFrame = window?.frame
