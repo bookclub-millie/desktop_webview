@@ -312,7 +312,7 @@ namespace webview_window
   {
     if (webview_)
     {
-
+      webview_->put_IsVisible(TRUE);
       // Assuming hwnd is your window handle
       SetWindowLongPtr(webview_, GWL_STYLE, WS_POPUP | WS_VISIBLE & ~WS_OVERLAPPEDWINDOW);
 

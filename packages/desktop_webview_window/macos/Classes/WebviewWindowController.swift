@@ -61,6 +61,9 @@ class WebviewWindowController: NSWindowController {
 
     window?.setContentSize(NSSize(width: width, height: height))
     window?.contentMinSize = NSSize(width: 320, height: 320)
+    window?.titlebarAppearsTransparent = true
+    window?.styleMask.insert(.fullSizeContentView)
+    window?.collectionBehavior.insert(.fullScreenPrimary)
 
     // let screenFrame = NSScreen.main?.frame
     // let windowFrame = window?.frame
@@ -68,8 +71,8 @@ class WebviewWindowController: NSWindowController {
     // let centerY = (screenFrame!.height - windowFrame!.height) / 2
 
     //set window position
-    var x = CGFloat(integerLiteral: windowPosX)
-    var y = CGFloat(integerLiteral: windowPosY)
+    let x = CGFloat(integerLiteral: windowPosX)
+    let y = CGFloat(integerLiteral: windowPosY)
 
     window?.setFrameOrigin(NSPoint(x: x, y: y))
     // window?.center()
