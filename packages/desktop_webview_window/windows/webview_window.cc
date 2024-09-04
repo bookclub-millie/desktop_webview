@@ -228,7 +228,7 @@ WebviewWindow::MessageHandler(
   {
     if (wparam == VK_ESCAPE)
     {
-      ShowWindow(hwnd, SW_MINIMIZE);
+      // ShowWindow(hwnd, SW_MINIMIZE);
       return 0;
     }
     break;
